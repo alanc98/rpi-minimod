@@ -1,0 +1,26 @@
+Raspberry Pi OpenOCD configuration
+----------------------------------
+
+Configuration files for the Raspberry Pi using the FT2232H MiniMod evaluation board. This board can be used for both the UART connection and a JTAG connection to the PC through the USB port. 
+
+Instructions for wiring up the MiniMod here:
+http://alanstechnotes.blogspot.com/2014/05/a-low-cost-jtag-debugger-for-raspberry.html
+
+How to use the MiniMod as a UART connection on the Raspberry Pi
+---------------------------------------------------------------
+
+When the MiniMod is plugged into a PC running Linux there are two devices:
+/dev/ttyUSB0 and /dev/ttyUSB1
+
+The UART is /dev/ttyUSB1
+In minicom or any other serial terminal program, select /dev/ttyUSB1, 115K baud, 8N1.   
+
+How to start OpenOCD
+--------------------
+
+.starting openocd
+------------------------------------------
+$ sudo openocd -f minimod.cfg -f raspi.cfg 
+------------------------------------------
+
+
