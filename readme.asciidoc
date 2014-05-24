@@ -43,7 +43,7 @@ Using OpenOCD with the Raspberry Pi
 At this point, I do not have GDB working for debugging. But the MiniMod can be used to load and run code, which ends the SD card shuffle. But the real benefit will be debugging low level code on the Pi with GDB.
 
 Install OpenOCD
-===============
+~~~~~~~~~~~~~~~
 
 Here is what I did on my Ubuntu 14.04 LTS system to set up OpenOCD.
 First, download openocd-0.8.0-rc1.tar.bz2
@@ -60,7 +60,7 @@ $ sudo make install
 OpenOCD should now be in /usr/local.
 
 Setting up the Pi to configure JTAG
-===================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to use JTAG on the Pi with the MiniMod, you will need to configure the GPIO pins to enable JTAG. You need to have a program boot on the Pi that does this, so you can then connect to the Pi using OpenOCD. 
 
@@ -68,7 +68,7 @@ For my setup, I modified a the RTEMS hello world example to configure the GPIO p
 
 
 Using OpenOCD
-=============
+~~~~~~~~~~~~~
 
 In order to load, you need a couple of terminal windows open. One is used for running OpenOCD, the other is a telnet window that you use to control OpenOCD. You also need to have the Pi booted with a program that sets up the GPIO pins for JTAG.
 
