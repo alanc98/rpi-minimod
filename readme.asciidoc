@@ -15,12 +15,87 @@ When the MiniMod is plugged into a PC running Linux there are two devices:
 The UART is /dev/ttyUSB1
 In minicom or any other serial terminal program, select /dev/ttyUSB1, 115K baud, 8N1.   
 
-How to start OpenOCD
---------------------
+I currently use ubuntu linux for this, so I first install minicom by typing:
+
+------------------------------
+$ sudo apt-get install minicom
+------------------------------
+
+Then, I set the defaults for the UART by running:
+
+-----------------
+$ sudo minicom -s
+-----------------
+
+This is where you will use the minicom menus to select /dev/ttyUSB1, 115k baud, 8N1, and no hardware flow control. Once you have done that save it, and exit minicom
+
+If you want to run Minicom without using "sudo", you can add your user account to the dialout group:
+
+---------------------------------
+$ sudo adduser <username> dialout
+---------------------------------
+
+Now, you can just run minicom and see the output from the Raspberry Pi UART.
+
+Using OpenOCD with the Raspberry Pi
+-----------------------------------
+
+At this point, I do not have GDB working for debugging. But the MiniMod can be used to load and run code, which ends the SD card shuffle. But the real benefit will be debugging low level code on the Pi with GDB.
+
+Install OpenOCD
+===============
+
+Here is what I did on my Ubuntu 14.04 LTS system to set up OpenOCD.
+First, download openocd-0.8.0-rc1.tar.bz2
+
+-----------------------------------------
+$ sudo apt-get install libusb-1.0.0-dev
+$ tar -xf openocd-0.8.0-rc1.tar.bz2
+$ cd openocd-0.8.0-rc1
+$ ./configure --enable-ftdi
+$ make
+$ sudo make install
+-----------------------------------------
+
+OpenOCD should now be in /usr/local.
+
+Setting up the Pi to configure JTAG
+===================================
+
+In order to use JTAG on the Pi with the MiniMod, you will need to configure the GPIO pins to enable JTAG. You need to have a program boot on the Pi that does this, so you can then connect to the Pi using OpenOCD. 
+
+For my setup, I modified a the RTEMS hello world example to configure the GPIO pins. The project is here: https://github.com/alanc98/hello-rtems-jtag
+
+
+Using OpenOCD
+=============
+
+In order to load, you need a couple of terminal windows open. One is used for running OpenOCD, the other is a telnet window that you use to control OpenOCD. You also need to have the Pi booted with a program that sets up the GPIO pins for JTAG.
 
 .starting openocd
 ------------------------------------------
 $ sudo openocd -f minimod.cfg -f raspi.cfg 
 ------------------------------------------
 
+.telnet to openocd
+-----------------------
+$ telnet localhost 4444
+-----------------------
 
+You should now see the command line. Halt the pi, by typing:
+
+------
+> halt
+------
+
+Load an RTEMS ( or other bare metal image )
+
+-------------------------------
+> load_image /home/alan/rki.elf
+-------------------------------
+
+Run the new image ( my image has "start" at address 0x8040 )
+
+---------------
+> resume 0x8040
+---------------
